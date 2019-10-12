@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+ <!-- Bootstrap core CSS -->
+    <link href="../dist/css/bootstrap.min.css" rel="stylesheet">
+   
+</head>
+<body>
+<div class="col-md-8" style="margin-left: 200px;margin-top: 100px;font-size: 20px">
+	添加用户<a href="../view/add.html" class="glyphicon glyphicon-plus"></a>
+	<table class="table table-bordered">
+ 		<tr>
+ 			<td>编号</td>
+ 			<td>用户名</td>
+ 			<td>密码</td>
+ 			<td>生日</td>
+ 			<td>操作</td>
+ 		</tr>
+	</table>
+</div>
+<script type="text/javascript" src="../js/jquery.js"></script>
+<script type="text/javascript">
+/**
+ * 页面加载
+ */
+$(document).ready(function(){
+	$.ajax({
+		url:"/RESTful/user/list",
+		type:"GET",
+		success:function(data){
+			if(data.code == 200){
+				for(var i=0;i<data.data.length;i++){
+					var timeNum = data.data[i].birthday
+					var timeObj = new Date(timeNum);
+					var day = timeObj.getDate();
+					var month = timeObj.getMonth()+1;
+					var year = timeObj.getFullYear();
+					var birTime = year+"-"+month+"-"+day;
+					$("tr:last").after("<tr>"+
+							"<td>"+data.data[i].id+"</td>"+
+							"<td>"+data.data[i].name+"</td>"+
+							"<td>"+data.data[i].password+"</td>"+
+							"<td>"+birTime+"</td>"+
+							"<td><a onclick=\"del("+data.data[i].id+")\" class=\"glyphicon glyphicon-trash\" href=\"#\"></a>|"+
+							"<a onclick=\"toUpdate("+data.data[i].id+")\" class=\"glyphicon glyphicon-pencil\" href=\"#\"></a></td>"+
+							"</tr>");
+				}
+			}
+		}
+	});
+});
+</script>
+<script type="text/javascript">
+function del(id){
+	alert(id);
+	$.ajax({
+		url:"/RESTful/user/"+id,   // /user/39
+		type:"DELETE",
+		success:function(data){
+			if(data.code == 200){
+				alert("删除成功");
+				window.location.href="/RESTful/view/list.html";
+			}
+		}
+	});
+}
+</script>
+<script type="text/javascript">
+function toUpdate(id){
+	document.cookie="userId="+id;
+	window.location.href="/RESTful/view/update.html";
+}
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

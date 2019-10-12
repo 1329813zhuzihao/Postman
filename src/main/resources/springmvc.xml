@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+    		http://www.springframework.org/schema/beans 
+    		http://www.springframework.org/schema/beans/spring-beans.xsd
+    		http://www.springframework.org/schema/mvc
+        	http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        	http://www.springframework.org/schema/context
+       		http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- 1 : 配置适用于 注解开发的适配器和映射器 -->
+	<mvc:annotation-driven>
+		<mvc:message-converters register-defaults="true">
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>application/json;charset=utf-8</value>
+						<value>text/html;charset=utf-8</value>
+						<!-- application 可以在任意 form 表单里面 enctype 属性默认找到 -->
+						<value>application/x-www-form-urlencoded</value>
+					</list>
+				</property>
+			</bean>
+			<bean
+				class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"></bean>
+		</mvc:message-converters>
+
+	</mvc:annotation-driven>
+	<!-- 2: 开启扫描,使注解生效 扫描到哪一个有注解的包 -->
+	<context:component-scan base-package="com.zhiyou100.controller">
+		<!-- 只扫描Controller -->
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+
+	<!-- 静态资源映射 -->
+	<mvc:resources location="/dist/" mapping="/dist/**"></mvc:resources>
+	<mvc:resources location="/layui/" mapping="/layui/**"></mvc:resources>
+	<mvc:resources location="/js/" mapping="/js/**"></mvc:resources>
+	<mvc:resources location="/view/" mapping="/view/**"></mvc:resources>
+	<mvc:resources location="/" mapping="/index.html"></mvc:resources>
+
+</beans>
